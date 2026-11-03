@@ -1,0 +1,31 @@
+---
+description: Stack Next.js + Supabase + Vercel del proyecto de inventarios
+alwaysApply: true
+---
+
+# Stack
+
+- **Frontend/App:** Next.js (App Router) + TypeScript + Tailwind
+- **Backend/datos:** Supabase (Postgres, Auth, RLS, Storage si hace falta)
+- **Deploy:** Vercel
+- Docs de libs: Context7 MCP cuando haya dudas de API actual
+
+## Convenciones
+
+- Server Components por defecto; Client Components solo con interactividad.
+- Acceso a datos con cliente Supabase server-side en Server Actions / Route Handlers.
+- **RLS obligatorio** en tablas de negocio; no confiar solo en el cliente.
+- Secrets solo en env (`NEXT_PUBLIC_` solo para claves públicas).
+- Migraciones SQL versionadas (Supabase); no “arreglar” prod a mano sin migración.
+- UI en español (hotel/ops); código e IDs en inglés (`products`, `stock_movements`).
+
+## Skills a usar
+
+- Dominio: skill `hotel-inventory-domain` + `docs/product-spec.md`
+- Ops / lecciones: skill `project-lessons` + `docs/lessons-learned.md`
+- Supabase / Postgres / auth: skills `supabase`, `supabase-postgres-best-practices`, `nextjs-supabase-auth`
+- React/Next/deploy: `vercel-react-best-practices`, `vercel-composition-patterns`, `deploy-to-vercel`
+
+## Entrega
+
+Tras cada cambio de código: **commit + push + deploy** (regla `ship-on-change.mdc`). No esperar permiso extra.

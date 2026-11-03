@@ -1,0 +1,9 @@
+flowchart LR
+  A[Developer] --> B[git push main]
+  B --> C[GitHub]
+  C --> D[GitHub Actions CI]
+  D --> E{test + lint + build OK?}
+  E -->|No| F[Falla el check]
+  E -->|Sí| G[Vercel Production]
+  C --> G
+  G --> H[your-app.vercel.app]

@@ -1,0 +1,31 @@
+---
+description: Dominio del sistema de inventarios Hotel Demo (módulos y reglas de negocio)
+alwaysApply: true
+---
+
+# Inventario Hotel Demo
+
+Sistema web de control de inventarios para **Ama de Llaves / Lavandería**. Spec completa: `docs/product-spec.md`.
+
+## Módulos (menú)
+
+Dashboard · Inventario General · Entradas/Salidas · Stock linner recepción · Blancos (linners de piso) · Inventario Físico · Alertas bajo stock · Reportes · Uniformes · Amenidades/Lencería por camarera · Maquinaria y equipos · Estadísticas · Usuarios
+
+El menú se filtra por cargo (`src/lib/auth/modules.ts`): gerentes ven todo; RR.HH. uniformes; lavandería blancos/uniformes/maquinaria; piso inventario, conteo, alertas, reportes, dotación y linner recepción. **No hay módulo Solicitudes.**
+
+## Reglas no negociables
+
+- Los módulos **comparten el mismo stock**; no son apps aisladas.
+- Existencia: `anterior + entradas − salidas`. Toda salida (manual, dotación camarera, conteo físico, envío no-blancos al linner de recepción) actualiza kardex.
+- No salidas con existencia negativa salvo política explícita.
+- Alertas: comparar `existencia` vs `stock_minimo` (normal / próximo / bajo / agotado). `sin_conteo` no es alerta. El linner de recepción bajo mínimo se ve en su propio módulo, no en la burbuja.
+- Blancos: estados `Disponible → En uso → En lavandería → Dañado → Baja`. Linners (`L06`–`L26` sin `L13`, más `REC`) son sub-ubicación de `available` (`sum(linners) <= available`); no generan kardex. Vueltas = `(available + in_use + in_laundry) / (212 × pieces_per_room)`.
+- Uniformes: `total = en_uso + disponible + no_utilizable`; trabajador vacío = disponible sin asignar. Fijos vs eventuales salen del padrón (`employment_type`).
+- Dotación por camarera: parámetros configurables por tipo/estado de habitación (ocupación, salida, limpieza, inspected, clean, dirty, out of order). Una confirmada se **rectifica** (delta de kardex), no se reedita a mano.
+- Maquinaria: `laundry_machine` vs `room_equipment` (aspiradoras, sopladores); mismos tickets.
+- Estadísticas: consumo real vs ocupación hotelera (dirty/clean); no inventar datos.
+- Fechas operativas en `America/Caracas`.
+
+## Al implementar
+
+Leer `docs/product-spec.md` del módulo afectado. Preferir flujos atómicos (asignar uniforme, confirmar dotación, conteo físico con diferencias). El menú se filtra por cargo.

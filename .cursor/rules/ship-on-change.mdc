@@ -1,0 +1,27 @@
+---
+description: Tras cada cambio de código, commit + push a GitHub y deploy a Vercel sin pedir permiso extra
+alwaysApply: true
+---
+
+# Ship on every change
+
+Cuando el agente termine un cambio real en este repo (código, schema, docs de producto, rules/skills del proyecto):
+
+1. **Commit** con mensaje claro (por qué, no solo qué). Seguir el protocolo de commit del usuario (status/diff/log, sin secrets, HEREDOC).
+2. **Push** a `origin` de la rama actual (`git push -u` si hace falta).
+3. **Deploy**: con GitHub → Vercel ya conectado, el push a `main` despliega solo. Si el push no dispara deploy (rama sin integración, fallo de build, o el usuario pide preview), usar Vercel CLI / skill `deploy-to-vercel` y devolver la URL.
+4. Al final, **decir la URL** de producción o preview:
+   - Prod: https://your-app.vercel.app
+
+## Excepciones (no ship automático)
+
+- Solo preguntas / exploración sin editar archivos
+- El usuario pide explícitamente **no** subir o **no** desplegar
+- Cambios solo locales de secretos (`.env.local`) — nunca commit de secrets
+- Commit vacío o working tree limpio
+
+## No negociable
+
+- No esperar a que el usuario diga “haz push” o “despliega” en este proyecto: es el flujo por defecto.
+- No force-push a `main`/`master`.
+- No `--no-verify` salvo petición explícita.
